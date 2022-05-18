@@ -4,18 +4,7 @@ from random import randint
 import sys
 import websockets
 import time
-#from bot import BotQuoridor
-
-
-async def send(websocket, action, data):
-    message = json.dumps(
-        {
-            'action': action,
-            'data': data,
-        }
-    )
-    print(message)
-    await websocket.send(message)
+from bot import BotQuoridor
 
 
 async def start(auth_token):
@@ -33,6 +22,17 @@ async def start(auth_token):
             time.sleep(3)
 
 
+async def send(websocket, action, data):
+    message = json.dumps(
+        {
+            'action': action,
+            'data': data,
+        }
+    )
+    print(message)
+    await websocket.send(message)
+
+
 async def play(websocket):
     while True:
         try:
@@ -44,7 +44,6 @@ async def play(websocket):
             if request_data['event'] == 'gameover':
                 pass
             if request_data['event'] == 'challenge':
-                # if request_data['data']['opponent'] == 'favoriteopponent':
                 await send(
                     websocket,
                     'accept_challenge',
@@ -70,32 +69,19 @@ async def process_your_turn(websocket, request_data):
 
 
 async def process_move(websocket, request_data):
-        side = request_data['data']['side']
-        pawn_board = [[None for _ in range(9)] for _ in range(9)]
-        for row in range(9):
-            for col in range(9):
-                string_row = request_data['data']['board'][17*(row*2): 17*(row*2) + 17]
-                pawn_board[row][col] = string_row[col * 2]
-        for row in range(9):
-            for col in range(9):
-                if pawn_board[row][col] == side:
-                    from_row = row
-                    from_col = col
-                    to_col = col
-                    break
-        to_row = from_row + (1 if side == 'N' else -1)
-        if pawn_board[to_row][from_col] != ' ':
-            to_row = to_row + (1 if side == 'N' else -1)
+        bot_init.side = request_data['data']['side']
+        bot_init.board = request_data['data']['board']
+        bot_init.bot_play()
         await send(
             websocket,
             'move',
             {
                 'game_id': request_data['data']['game_id'],
                 'turn_token': request_data['data']['turn_token'],
-                'from_row': from_row,
-                'from_col': from_col,
-                'to_row': to_row,
-                'to_col': to_col,
+                'from_row': int(bot_init.from_row),
+                'from_col': int(bot_init.from_col),
+                'to_row': int(bot_init.to_row),
+                'to_col': int(bot_init.to_col),
             },
         )
 
@@ -116,6 +102,7 @@ async def process_wall(websocket, request_data):
 
 if __name__ == '__main__':
     if len(sys.argv) >= 2:
+        bot_init = BotQuoridor()
         auth_token = sys.argv[1]
         asyncio.get_event_loop().run_until_complete(start(auth_token))
     else:
