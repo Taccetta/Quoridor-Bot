@@ -50,7 +50,7 @@ class BotQuoridor():
                                         self.board, self.walls, 
                                         self.my_pawn_coordinates, self.opp_pawn))
         for pawn in self.created_pawns:
-            #print("moves",pawn.my_movements)
+            print("moves",pawn.my_movements)
             for moves in pawn.my_movements:
                 self.possible_moves.append(moves)
         
@@ -62,7 +62,7 @@ class BotQuoridor():
             if move[2] >= best_score:
                 best_score = move[2]
                 self.final_choice = move[0:2]
-        #print("choice", self.final_choice)
+        print("choice", self.final_choice)
 
 
     def bot_play(self):
@@ -79,7 +79,7 @@ if __name__ == '__main__':
 
     data = None
     test = BotQuoridor()
-    test.board = '                 -*- -*-   -*- -*-                                                                        N N    |     -*-     -*-*         S S   N|           -*-                  S      -*-                                                                 -*- -*-                           '
+    test.board = "          N                                                                                                   N     N       |-*-|    -*-     *S S*   |        |   |   *                |                                  S                                                                      "
     test.side = "N"
     test.board_state_creator()
     test.opponent_side_set()
