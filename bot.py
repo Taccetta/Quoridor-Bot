@@ -1,6 +1,7 @@
-from tkinter import N
 import numpy as np
 from itertools import product as iteration
+from random import choice
+from pawns import MyPawn
 
 class BotQuoridor():
 
@@ -13,17 +14,16 @@ class BotQuoridor():
         self.from_col = 0
         self.to_row = 0
         self.to_col = 0
-        self.my_pawn = [[0 for i in range(2)] for i in range(3)] #check
-        self.opp_pawn = [[0 for i in range(2)] for i in range(3)]
-        #self.my_pawn = [[0, 3],[0, 5],[0, 7]] if self.side == 'N' else [[9, 3],[9, 5],[9, 7]]
-        #self.opp_pawn = [[9, 3],[9, 5],[9, 7]] if self.side == 'N' else [[0, 3],[0, 5],[0, 7]]
+        self.my_pawn_coordinates = []
+        self.opp_pawn = []
+        self.walls = []
+        self.created_pawns = []
+        self.possible_moves = []
+        self.final_choice = []
 
 
-    def split_char(self):
+    def board_state_creator(self):
         self.board = [char for char in self.board]
-
-
-    def board_logic_table(self):
         self.board = np.array(self.board).reshape(17,17)
 
 
@@ -35,54 +35,57 @@ class BotQuoridor():
 
 
     def check_pawns_and_walls_position(self):
-        my_pawn_number = 0
-        opp_pawn_number = 0
-        for row, col in iteration(range(0, 17, 2), range(0, 17, 2)):
+        for row, col in iteration(range(0, 17, 1), range(0, 17, 1)):
             if self.board[row][col] == self.side:
-                self.my_pawn[my_pawn_number] = [row//2, col//2]
-                my_pawn_number += 1
-                #print("N", self.my_pawn)
+                self.my_pawn_coordinates.append((row, col))
             elif self.board[row][col] == self.opp_side:
-                self.opp_pawn[opp_pawn_number] = [row//2, col//2]
-                opp_pawn_number += 1
-                #print("S", self.opp_pawn)
+                self.opp_pawn.append((row, col))
+            elif self.board[row][col] == '-' or self.board[row][col] == '|':
+                self.walls.append((row, col))
 
 
-    def move_foward(self):
-        for row, col in iteration(range(0, 17, 2), range(0, 17, 2)):
-            if self.board[row][col] == self.side:
-                self.from_row = row // 2
-                self.from_col = col // 2
-                self.to_col = col // 2
-                self.to_row = self.from_row + (2 if self.side == 'N' else -2) // 2
-                print(self.from_row, self.from_col, self.to_row, self.to_col)
-                #self.check_move()
-                break
+    def pawn_call(self):
+        for pawn in self.my_pawn_coordinates:
+            self.created_pawns.append(MyPawn(pawn[0], pawn[1], self.side, 
+                                        self.board, self.walls, 
+                                        self.my_pawn_coordinates, self.opp_pawn))
+        for pawn in self.created_pawns:
+            #print("moves",pawn.my_movements)
+            for moves in pawn.my_movements:
+                self.possible_moves.append(moves)
+        
 
 
-    def check_move(self):
-        if self.board[self.to_row][self.to_col] != "":
-            self.to_col = self.from_col + (- 2 // 2 if self.from_row != 0 else +2 // 2)
-            self.to_row = self.from_row + (-2 if self.side == 'N' else 2) // 2
+    def decide_move(self):
+        best_score = -1000
+        for move in self.possible_moves:
+            if move[2] >= best_score:
+                best_score = move[2]
+                self.final_choice = move[0:2]
+        #print("choice", self.final_choice)
+
 
     def bot_play(self):
-        self.split_char()
-        self.board_logic_table()
+        self.board_state_creator()
         self.opponent_side_set()
         self.check_pawns_and_walls_position()
         print(self.board)
-        self.move_foward()
+        self.pawn_call()
+        self.decide_move()
+
 
 if __name__ == '__main__':
 
+
     data = None
     test = BotQuoridor()
-    test.board = "                                                                                     -*-                S                            -*-              N S                                                                                       N     N                                 S        "
+    test.board = '                 -*- -*-   -*- -*-                                                                        N N    |     -*-     -*-*         S S   N|           -*-                  S      -*-                                                                 -*- -*-                           '
     test.side = "N"
-    test.split_char()
-    test.board_logic_table()
+    test.board_state_creator()
     test.opponent_side_set()
     test.check_pawns_and_walls_position()
+    print("   0   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16")
     print(test.board)
     print(test.board[0][0])
-    test.move_foward()
+    test.pawn_call()
+    test.decide_move()

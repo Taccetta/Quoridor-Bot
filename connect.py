@@ -69,6 +69,7 @@ async def process_your_turn(websocket, request_data):
 
 
 async def process_move(websocket, request_data):
+        bot_init = BotQuoridor()
         bot_init.side = request_data['data']['side']
         bot_init.board = request_data['data']['board']
         bot_init.bot_play()
@@ -78,12 +79,13 @@ async def process_move(websocket, request_data):
             {
                 'game_id': request_data['data']['game_id'],
                 'turn_token': request_data['data']['turn_token'],
-                'from_row': int(bot_init.from_row),
-                'from_col': int(bot_init.from_col),
-                'to_row': int(bot_init.to_row),
-                'to_col': int(bot_init.to_col),
+                'from_row': int(bot_init.final_choice[0][0]//2),
+                'from_col': int(bot_init.final_choice[0][1]//2),
+                'to_row': int(bot_init.final_choice[1][0]//2),
+                'to_col': int(bot_init.final_choice[1][1]//2),
             },
         )
+        del bot_init
 
 
 async def process_wall(websocket, request_data):
@@ -102,7 +104,6 @@ async def process_wall(websocket, request_data):
 
 if __name__ == '__main__':
     if len(sys.argv) >= 2:
-        bot_init = BotQuoridor()
         auth_token = sys.argv[1]
         asyncio.get_event_loop().run_until_complete(start(auth_token))
     else:
