@@ -91,7 +91,7 @@ class MyPawn():
 
 
     def move_left(self):
-
+        score = 0
         landing_coordinates = (self.row, self.col-2)
         facing_left_wall = self.check_if_wall((self.row, self.col-1))
 
@@ -101,8 +101,12 @@ class MyPawn():
         claimed_square = self.check_if_pawn(landing_coordinates)
     
         if not claimed_square:
+            jumping_coordinates_wall = (self.row + 1*self.direction, self.col - 2)
+            wall_in_front = self.check_if_wall(jumping_coordinates_wall)
+            if wall_in_front:
+                score -= 1
             self.my_movements.append(((self.row, self.col),(landing_coordinates), 
-                                        0))
+                                        score))
         
         if not self.opponent_team == claimed_square:
             return
@@ -117,7 +121,7 @@ class MyPawn():
 
             if not claimed_jumping_square:
                     self.my_movements.append(((self.row, self.col),(jumping_coordinates), 
-                                                0))
+                                                score))
         
         if jumping_wall:
             jumping_coordinates_left_wall = (self.row + self.direction * 2, self.col-1)
@@ -129,10 +133,10 @@ class MyPawn():
                 
                 if not claimed_forward_left_pawn:
                     self.my_movements.append(((self.row, self.col),(jumping_coordinates_left_pawn), 
-                                            0))
+                                            score))
     
     def move_right(self):
-
+        score = 0
         landing_coordinates = (self.row, self.col+2)
         facing_right_wall = self.check_if_wall((self.row, self.col+1))
 
@@ -142,8 +146,12 @@ class MyPawn():
         claimed_square = self.check_if_pawn(landing_coordinates)
     
         if not claimed_square:
+            jumping_coordinates_wall = (self.row + 1 * self.direction, self.col + 2)
+            wall_in_front = self.check_if_wall(jumping_coordinates_wall)
+            if wall_in_front:
+                score -= 1
             self.my_movements.append(((self.row, self.col),(landing_coordinates), 
-                                        0))
+                                        score))
         
         if not self.opponent_team == claimed_square:
             return
@@ -159,7 +167,7 @@ class MyPawn():
 
             if not claimed_jumping_square:
                     self.my_movements.append(((self.row, self.col),(jumping_coordinates), 
-                                                0))
+                                                score))
         
         if jumping_wall:
             jumping_coordinates_left_wall = (self.row + self.direction * 2, self.col+1)
@@ -171,7 +179,7 @@ class MyPawn():
                 
                 if not claimed_forward_left_pawn:
                     self.my_movements.append(((self.row, self.col),(jumping_coordinates_left_pawn), 
-                                            0))
+                                            score))
 
     def score(self, row):
             value = 0

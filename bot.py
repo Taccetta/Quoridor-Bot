@@ -79,7 +79,7 @@ if __name__ == '__main__':
 
     data = None
     test = BotQuoridor()
-    test.board = "          N                                                                                                   N     N       |-*-|    -*-     *S S*   |        |   |   *                |                                  S                                                                      "
+    test.board = "                                                                                                              N             |-*-|    -*-     *S S*   |        |   |   *                |                              S   N                -*-                                                   "
     test.side = "N"
     test.board_state_creator()
     test.opponent_side_set()
