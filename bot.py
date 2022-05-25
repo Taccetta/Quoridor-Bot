@@ -4,6 +4,7 @@ from random import choice
 from pawns import MyPawn
 from wall import MyWall
 
+
 class BotQuoridor():
 
 
@@ -59,7 +60,6 @@ class BotQuoridor():
             # print("moves", pawn.my_movements)
             for moves in pawn.my_movements:
                 self.possible_moves.append(moves)
-        
 
 
     def decide_move(self):
@@ -68,25 +68,28 @@ class BotQuoridor():
             if move[2] >= best_score:
                 best_score = move[2]
                 self.final_choice = move[0:2]
+        print("Side: ", self.side)
         print("choice", self.final_choice)
-        print(self.opp_pawn)
-        if self.final_choice == []:
+        if self.final_choice == [] or best_score < 0 and self.remaining_walls > 0:
             self.walling = MyWall(self.side, self.board, self.walls, 
                             self.my_pawn_coordinates, self.opp_pawn)
             self.im_going_to_move = "wall"
-            self.wall_placing_coordinates.append((self.walling.final_wall_choice[0], self.walling.final_wall_choice[1]))
+            self.wall_placing_coordinates.append((self.walling.final_wall_choice[0] - self.created_pawns[0].direction, 
+                                                self.walling.final_wall_choice[1]))
+            print(self.wall_placing_coordinates[0][0]//2, end=" ")
+            print(self.wall_placing_coordinates[0][1]//2)
             print(self.im_going_to_move)
+            print(self.remaining_walls)
         else:
             self.im_going_to_move = "pawn"
             print(self.im_going_to_move)
-            
 
 
     def bot_play(self):
         self.board_state_creator()
         self.opponent_side_set()
         self.check_pawns_and_walls_position()
-        print("  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6")
+        print("\n\n\n  0   1   2   3   4   5   6   7   8")
         print(str(self.board).replace("'", "").replace("[[", " |").replace("[", "|").replace("]]", "|").replace("]", "|"))
         self.pawn_call()
         self.decide_move()
@@ -97,15 +100,15 @@ if __name__ == '__main__':
 
     data = None
     test = BotQuoridor()
-    test.board = "                                                                                   |                *                |                       | |       |      * *       *    | |N|     | |    *-*-      *      |    S    |N|             -*-*   S            |N              -*-    S            "
-    #test.board = '                               -*-                               -*-         |                *              |N|              *-*-             |                 -*-              S                                S                                                                             '
+    #test.board = "                                                                                   |                *                |                       | |       |      * *       *    | |N|     | |    *-*-      *      |    S    |N|             -*-*   S            |N              -*-    S            "
+    test.board = '                               -*-                               -*-         |                *              |N|              *-*-             |                 -*-              S                                         S                                                                    '
+    # test.board = "                   -*-            S                    -*-                                 -*-                                 -*-                                                                            N              -*- -*-                  N     N      -*- -*- -*-          S S      "
     test.side = "N"
     test.board_state_creator()
     test.opponent_side_set()
     test.check_pawns_and_walls_position()
-    print("  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6")
+    print("\n\n\n  0   1   2   3   4   5   6   7   8")
     print(str(test.board).replace("'", "").replace("[[", " |").replace("[", "|").replace("]]", "|").replace("]", "|"))
-
     test.pawn_call()
     test.decide_move()
-    del test
+    

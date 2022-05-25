@@ -7,6 +7,7 @@ import time
 from bot import BotQuoridor
 import os
 
+
 async def start(auth_token):
     uri = "wss://4yyity02md.execute-api.us-east-1.amazonaws.com/ws?token={}".format(auth_token)
     while True:
@@ -60,6 +61,7 @@ async def play(websocket):
             print('error {}'.format(str(e)))
             break
 
+
 async def process_your_turn(websocket, request_data):
         #print(request_data)
         bot_init = BotQuoridor()
@@ -76,7 +78,8 @@ async def process_your_turn(websocket, request_data):
                 del bot_init
                 break
             elif bot_init.im_going_to_move == "wall":
-                await process_wall(websocket, request_data, bot_init.wall_placing_coordinates)
+                await process_wall(websocket, request_data, bot_init.wall_placing_coordinates[0][0]//2,
+                                    bot_init.wall_placing_coordinates[0][0]//2)
                 del bot_init
                 break
 
@@ -97,16 +100,16 @@ async def process_move(websocket, request_data, from_row, from_col, to_row, to_c
         
 
 
-async def process_wall(websocket, request_data, coordinates):
+async def process_wall(websocket, request_data, to_row, to_col):
     await send(
         websocket,
         'wall',
         {
             'game_id': request_data['data']['game_id'],
             'turn_token': request_data['data']['turn_token'],
-            'row': coordinates[0][0],
-            'col': coordinates[0][1],
-            'orientation': 'h' if randint(0, 1) == 0 else 'v'
+            'row': to_row,
+            'col': to_col,
+            'orientation': 'h'
         },
     )
 

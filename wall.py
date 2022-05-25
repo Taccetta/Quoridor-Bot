@@ -35,17 +35,10 @@ class MyWall():
                 self.final_wall_choice.append(pawn[1])
                 break
         
-        for i in range(len(self.opp_pawns)):
-            if (self.final_wall_choice[0], self.final_wall_choice[1]) == self.opp_pawns[i]:
-                self.opp_pawns.pop(i)
-                break
-        
-        if self.final_wall_choice[1] % 2 == 1:
-            self.final_wall_choice[1] = self.final_wall_choice[1] - 1
-        
-        print(self.final_wall_choice)
-        # print(self.opp_pawns)
-        
+        if self.final_wall_choice[1] == 16:
+            self.final_wall_choice[1] = 14
+
+
 
 
 
