@@ -1,0 +1,31 @@
+version: 2.1
+
+
+orbs:
+  python: circleci/python@1.5.0
+
+jobs:
+  build-and-test: # This is the name of the job, feel free to change it to better match what you're trying to do!
+    docker:
+      - image: cimg/python:3.10.2
+    steps:
+      - checkout
+      - python/install-packages:
+          pkg-manager: pip
+          # app-dir: ~/project/package-directory/  # If you're requirements.txt isn't in the root directory.
+          # pip-dependency-file: test-requirements.txt  # if you have a different name for your requirements file, maybe one that combines your runtime and test requirements.
+      - run: pip install parameterized
+      - run: pip install numpy
+      - run:
+          # This assumes pytest is installed via the install-package step above
+          command: python3 test_bot.py
+      - run:
+          command: python3 test_pawn.py
+      - run:
+          command: python3 test_wall.py
+
+workflows:
+  sample: # This is the name of the workflow, feel free to change it to better match your workflow.
+    # Inside the workflow, you define the jobs you want to run.
+    jobs:
+      - build-and-test
