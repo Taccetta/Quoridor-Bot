@@ -3,8 +3,7 @@
 class MyPawn():
 
 
-    def __init__(self, row, col, team, board, walls, ally_pawns, opp_pawns):
-        self.board = board
+    def __init__(self, row, col, team, walls, ally_pawns, opp_pawns):
         self.row = row
         self.col = col
         self.team = team

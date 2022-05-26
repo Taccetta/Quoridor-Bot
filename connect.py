@@ -79,7 +79,7 @@ async def process_your_turn(websocket, request_data):
                 break
             elif bot_init.im_going_to_move == "wall":
                 await process_wall(websocket, request_data, bot_init.wall_placing_coordinates[0][0]//2,
-                                    bot_init.wall_placing_coordinates[0][0]//2)
+                                    bot_init.wall_placing_coordinates[0][1]//2)
                 del bot_init
                 break
 
@@ -112,13 +112,6 @@ async def process_wall(websocket, request_data, to_row, to_col):
             'orientation': 'h'
         },
     )
-
-
-def clearscreen():
-        if os.name == "posix":
-            os.system ("clear")
-        elif os.name == "ce" or os.name == "nt" or os.name == "dos":
-            os.system ("cls")
 
 
 if __name__ == '__main__':

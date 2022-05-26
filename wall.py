@@ -15,12 +15,14 @@ class MyWall():
         self.final_wall_choice = []
         self.decide_pawn_to_walling()
 
+
     def check_if_wall(self, coordinates):
         return coordinates in self.walls
 
 
     def decide_pawn_to_walling(self):
-        for pawn in self.opp_pawns:
+        opp_pawns_count = self.opp_pawns
+        for pawn in opp_pawns_count:
             embedded_wall = self.check_if_wall((pawn[0] + self.direction, pawn[1]))
             if embedded_wall:
                 self.opp_pawns.remove(pawn)
