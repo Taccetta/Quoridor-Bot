@@ -1,11 +1,9 @@
 import asyncio
 import json
-from random import randint
 import sys
 import websockets
 import time
 from bot import BotQuoridor
-import os
 
 
 async def start(auth_token):
