@@ -1,6 +1,5 @@
 import numpy as np
 from itertools import product as iteration
-from random import choice
 from pawns import MyPawn
 from wall import MyWall
 
@@ -57,7 +56,6 @@ class BotQuoridor():
                                         self.opp_pawn
                                     ))
         for pawn in self.created_pawns:
-            # print("moves", pawn.my_movements)
             for moves in pawn.my_movements:
                 self.possible_moves.append(moves)
 
@@ -69,7 +67,8 @@ class BotQuoridor():
                 best_score = move[2]
                 self.final_choice = move[0:2]
         print("Side: ", self.side)
-        if self.final_choice == [] or best_score < 0 and self.remaining_walls > 2:
+
+        if self.final_choice == [] or best_score < -3 and self.remaining_walls > 5:
             self.wall_place = MyWall(self.side, self.walls, 
                             self.my_pawn_coordinates, self.opp_pawn)
             if self.wall_place.final_wall_choice == []:
@@ -79,7 +78,7 @@ class BotQuoridor():
             self.wall_placing_coordinates.append((self.wall_place.final_wall_choice[0] - self.created_pawns[0].direction, 
                                                 self.wall_place.final_wall_choice[1]))
             print(self.im_going_to_move)
-            
+
         else:
             self.im_going_to_move = "pawn"
             print(self.im_going_to_move)
@@ -94,26 +93,3 @@ class BotQuoridor():
         print(str(self.board).replace("'", "").replace("[[", " |").replace("[", "|").replace("]]", "|").replace("]", "|"))
         self.pawn_call()
         self.decide_move()
-
-
-if __name__ == '__main__':
-
-
-    data = None
-    test = BotQuoridor()
-    #test.board = "                                                                                   |                *                |                       | |       |      * *       *    | |N|     | |    *-*-      *      |    S    |N|             -*-*   S            |N              -*-    S            "
-    test.board =  "                                                                                                         |     |     |    *     *     *   N|    N|    N| -*-   -*-   -*-                     -*-                S            -*- -*- -*-   -*-S             S            -*-                     "
-    # test.board = "                   -*-            S                    -*-                                 -*-                                 -*-                                                                            N              -*- -*-                  N     N      -*- -*- -*-          S S      "
-    test.side = "S"
-    test.board_state_creator()
-    test.opponent_side_set()
-    test.check_pawns_and_walls_position()
-    print("\n\n\n  0   1   2   3   4   5   6   7   8")
-    print(str(test.board).replace("'", "").replace("[[", " |").replace("[", "|").replace("]]", "|").replace("]", "|"))
-    print(test.board)
-    print(test.my_pawn_coordinates)
-    test.pawn_call()
-    test.decide_move()
-    print(test.wall_placing_coordinates)
-
-    

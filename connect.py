@@ -28,7 +28,6 @@ async def send(websocket, action, data):
             'data': data,
         }
     )
-    #print(message)
     await websocket.send(message)
 
 
@@ -61,7 +60,6 @@ async def play(websocket):
 
 
 async def process_your_turn(websocket, request_data):
-        #print(request_data)
         bot_init = BotQuoridor()
         bot_init.side = request_data['data']['side']
         bot_init.board = request_data['data']['board']

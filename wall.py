@@ -54,10 +54,3 @@ class MyWall():
         
         if self.final_wall_choice[1] < 0:
             self.final_wall_choice[0]+= self.direction
-
-
-
-
-
-
-
